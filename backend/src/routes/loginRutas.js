@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 const router = express.Router();
 
-// Ruta de login
+// Ruta de inicio de sesión
 router.post("/", async (req, res) => {
   const { email, password } = req.body;
 
@@ -19,7 +19,6 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
-    // En lugar de generar un token, devuelve los datos del usuario
     const token = JSON.stringify({
       id: usuario._id,
       nombre: usuario.nombre,
@@ -38,8 +37,26 @@ router.post("/", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error en el login:", error);
     res.status(500).json({ message: "Error en el servidor" });
+  }
+});
+
+// Ruta para restablecer contraseña
+router.post("/reset-password", async (req, res) => {
+  const { email, nuevaPassword } = req.body;
+
+  try {
+    const usuario = await Usuario.findOne({ email });
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuario no encontrado." });
+    }
+
+    usuario.password = nuevaPassword; // El hash se hace automáticamente en el modelo
+    await usuario.save();
+
+    res.status(200).json({ message: "Contraseña actualizada correctamente." });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar contraseña." });
   }
 });
 

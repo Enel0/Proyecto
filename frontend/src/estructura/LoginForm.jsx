@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -9,18 +10,16 @@ function LoginForm() {
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const [step, setStep] = useState("login"); // "login", "sendCode", "verifyCode", "resetPassword"
+  const [step, setStep] = useState("login");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Para guardar email y código generados
   const [email, setEmail] = useState("");
   const [codigoGenerado, setCodigoGenerado] = useState("");
   const [codigoIngresado, setCodigoIngresado] = useState("");
 
-  const password = watch("newPassword"); // para validar en reset password
+  const password = watch("newPassword");
 
-  // ---- Paso login normal ----
   const onLogin = async (data) => {
     setLoading(true);
     setErrorMessage("");
@@ -45,7 +44,6 @@ function LoginForm() {
     }
   };
 
-  // ---- Paso enviar código ----
   const enviarCodigo = async () => {
     setLoading(true);
     setErrorMessage("");
@@ -61,16 +59,13 @@ function LoginForm() {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) {
+      if (!res.ok || !data.codigo) {
         throw new Error(data.message || "Error enviando código");
-      }
-      if (!data.codigo) {
-        throw new Error("No se recibió código del servidor");
       }
       setCodigoGenerado(data.codigo);
       alert("Código enviado a tu correo");
       setStep("verifyCode");
-      reset(); // Limpia formulario
+      reset();
     } catch (e) {
       setErrorMessage(e.message);
     } finally {
@@ -78,7 +73,6 @@ function LoginForm() {
     }
   };
 
-  // ---- Paso verificar código ----
   const verificarCodigo = () => {
     setErrorMessage("");
     if (codigoIngresado === codigoGenerado) {
@@ -89,26 +83,26 @@ function LoginForm() {
     }
   };
 
-  // ---- Paso cambiar contraseña ----
   const cambiarPassword = async (data) => {
     setLoading(true);
     setErrorMessage("");
     try {
       if (!data.newPassword) throw new Error("Ingresa una nueva contraseña");
-      // Aquí haces fetch a la ruta backend que actualiza la contraseña
-      const res = await fetch("http://localhost:5000/api/auth/reset-password", {
+
+      const res = await fetch("http://localhost:5000/api/auth/login/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          codigo: codigoIngresado,
-          newPassword: data.newPassword,
+          nuevaPassword: data.newPassword
         }),
       });
+
       const response = await res.json();
       if (!res.ok) {
         throw new Error(response.message || "Error al cambiar la contraseña");
       }
+
       alert("Contraseña cambiada correctamente. Ahora puedes iniciar sesión.");
       setStep("login");
       reset();
@@ -122,7 +116,6 @@ function LoginForm() {
     }
   };
 
-  // --- Renderizado por paso ---
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white p-8 rounded shadow-lg max-w-md w-full">
@@ -138,14 +131,8 @@ function LoginForm() {
                 <label className="block text-gray-700 font-bold mb-2">Correo Electrónico</label>
                 <input
                   type="email"
-                  className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  {...register("email", {
-                    required: "El correo electrónico es obligatorio",
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: "Debe ser un correo válido",
-                    },
-                  })}
+                  className="w-full p-3 border rounded"
+                  {...register("email", { required: "El correo electrónico es obligatorio" })}
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
               </div>
@@ -153,25 +140,16 @@ function LoginForm() {
                 <label className="block text-gray-700 font-bold mb-2">Contraseña</label>
                 <input
                   type="password"
-                  className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border rounded"
                   {...register("password", { required: "La contraseña es obligatoria" })}
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
               </div>
-
               {errorMessage && <p className="text-red-500 text-sm mb-4">{errorMessage}</p>}
-
-              <button
-                type="submit"
-                className={`w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 focus:ring-2 focus:ring-orange-500 focus:outline-none ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                disabled={loading}
-              >
+              <button type="submit" className="w-full bg-orange-500 text-white py-2 rounded">
                 {loading ? "Cargando..." : "Iniciar Sesión"}
               </button>
             </form>
-
             <div className="text-center mt-4">
               <button
                 className="text-orange-500 hover:underline"
@@ -269,19 +247,6 @@ function LoginForm() {
                 {loading ? "Cambiando contraseña..." : "Cambiar contraseña"}
               </button>
             </form>
-            <button
-              className="w-full text-center text-gray-600 underline mt-2"
-              onClick={() => {
-                setStep("login");
-                setErrorMessage("");
-                reset();
-                setCodigoGenerado("");
-                setCodigoIngresado("");
-                setEmail("");
-              }}
-            >
-              Cancelar y volver al login
-            </button>
           </>
         )}
       </div>
