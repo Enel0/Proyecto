@@ -1,18 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CartContext } from '../context/CartContext'; // Importa el contexto del carrito
+import { CartContext } from '../context/CartContext';
+import { UserContext } from '../context/UserContext';
 import CarritoImage from '../Imagenes/carrito.png';
 
 const Catalogo = () => {
-  const { cart, setCart } = useContext(CartContext); // Accede al carrito desde el contexto
+  const { cart, setCart } = useContext(CartContext);
+  const { darkMode } = useContext(UserContext);
   const [productos, setProductos] = useState([]);
-  const navigate = useNavigate(); // Para redirección
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
+  const navigate = useNavigate();
 
-  // Cargar los productos desde la API
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/productos'); // Ajusta la URL si es necesario
+        const response = await fetch('http://localhost:5000/api/productos');
         const data = await response.json();
         setProductos(data);
       } catch (error) {
@@ -23,7 +34,6 @@ const Catalogo = () => {
     fetchProductos();
   }, []);
 
-  // Agregar un producto al carrito
   const handleAddProduct = (producto) => {
     setCart((prevCart) => {
       const productoEnCarrito = prevCart.find((item) => item._id === producto._id);
@@ -36,7 +46,6 @@ const Catalogo = () => {
     });
   };
 
-  // Eliminar un producto del carrito
   const handleRemoveProduct = (productoId) => {
     setCart((prevCart) => {
       const productoEnCarrito = prevCart.find((item) => item._id === productoId);
@@ -50,76 +59,110 @@ const Catalogo = () => {
     });
   };
 
-  // Redirigir a la página de Pcarrito
   const handleIrAPagar = () => {
-    navigate('/Pcarrito'); // Redirige a la ruta Pcarrito
+    navigate('/Pcarrito');
   };
 
-  // Redirigir al inicio (Home)
   const handleIrInicio = () => {
-    navigate('/'); // Redirige al inicio (Home)
+    navigate('/');
   };
 
-  // Formatear precios como pesos chilenos
   const formatearPesos = (valor) => {
     return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(valor);
   };
 
-  return (
-    <div className="flex flex-row min-h-screen">
-      {/* Columna izquierda: Catálogo */}
-      <div className="flex-1">
-        <div className="w-full h-12 bg-[#0D0A4F] flex justify-between items-center px-4">
-          <button
-            onClick={handleIrInicio}
-            className="bg-[#FF540C] hover:bg-[#FF6A00] text-white font-bold py-2 px-4 rounded"
-          >
-            Menú
-          </button>
-          <div className="flex items-center">
-            <img src={CarritoImage} alt="Carrito" className="w-8 h-8 mr-2 rounded-full" />
-            <span className="text-white">Carrito: {cart.reduce((acc, item) => acc + item.cantidad, 0)} productos</span>
-          </div>
-        </div>
+  const productosFiltrados = productos.filter((producto) => {
+    const coincideBusqueda = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+    const coincideCategoria = categoriaSeleccionada ? producto.categoria === categoriaSeleccionada : true;
+    return coincideBusqueda && coincideCategoria;
+  });
 
-        <h1 className="text-center text-4xl font-bold text-[#000000] mt-6 mb-6">
-          Catálogo
-        </h1>
-        <div className="flex flex-wrap justify-center items-center gap-8 p-8 bg-gray-100">
-          {productos.map((producto) => (
-            <div key={producto._id} className="bg-white p-4 rounded-lg shadow-md text-center">
-              <img
-                src={`http://localhost:5000${producto.imagen}`} // Ajusta la URL si es necesario
-                alt={producto.nombre}
-                className="w-48 h-auto mx-auto mb-4"
-              />
-              <h3 className="text-xl font-bold text-[#0D0A4F]">{producto.nombre}</h3>
-              <p className="text-sm text-gray-700">{producto.descripcion}</p>
-              <p className="text-lg font-bold text-[#FF540C]">{formatearPesos(producto.precio)}</p>
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={() => handleAddProduct(producto)}
-                  className="bg-[#FF540C] hover:bg-[#FF6A00] text-white font-bold py-2 px-4 rounded"
-                >
-                  Agregar
-                </button>
-              </div>
-            </div>
-          ))}
+  const categoriasUnicas = [...new Set(productos.map(p => p.categoria))];
+
+  return (
+    <div className="flex flex-col min-h-screen bg-white dark:bg-black text-black dark:text-white">
+      {/* Barra superior */}
+      <div className="w-full h-12 bg-[#0D0A4F] flex justify-between items-center px-4">
+        <button
+          onClick={handleIrInicio}
+          className="bg-[#FF540C] hover:bg-[#FF6A00] text-white font-bold py-2 px-4 rounded"
+        >
+          Menú
+        </button>
+        <div className="flex items-center space-x-4">
+          <img src={CarritoImage} alt="Carrito" className="w-8 h-8 mr-2 rounded-full" />
+          <span className="text-white">
+            Carrito: {cart.reduce((acc, item) => acc + item.cantidad, 0)} productos
+          </span>
         </div>
       </div>
 
-      {/* Columna derecha: Lista del carrito */}
+      <h1 className="text-center text-4xl font-bold text-[#0D0A4F] dark:text-white mt-6 mb-4">
+        Catálogo
+      </h1>
+
+      {/* Filtros */}
+      <div className="flex flex-wrap justify-center gap-4 mb-6 px-6">
+        <input
+          type="text"
+          placeholder="Buscar producto..."
+          className="p-2 border rounded w-full sm:w-60 dark:bg-gray-700 dark:text-white"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          className="p-2 border rounded w-full sm:w-60 dark:bg-gray-700 dark:text-white"
+          value={categoriaSeleccionada}
+          onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+        >
+          <option value="">Todas las categorías</option>
+          {categoriasUnicas.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Productos */}
+      <div className="flex flex-wrap justify-center items-center gap-8 p-8 bg-gray-100 dark:bg-gray-900">
+        {productosFiltrados.map((producto) => (
+          <div
+            key={producto._id}
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center text-black dark:text-white"
+          >
+            <img
+              src={`http://localhost:5000${producto.imagen}`}
+              alt={producto.nombre}
+              className="w-48 h-auto mx-auto mb-4"
+            />
+            <h3 className="text-xl font-bold text-[#0D0A4F] dark:text-white">{producto.nombre}</h3>
+            <p className="text-sm text-gray-700 dark:text-gray-300">{producto.descripcion}</p>
+            <p className="text-lg font-bold text-[#FF540C]">{formatearPesos(producto.precio)}</p>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => handleAddProduct(producto)}
+                className="bg-[#FF540C] hover:bg-[#FF6A00] text-white font-bold py-2 px-4 rounded"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Carrito lateral */}
       {cart.length > 0 && (
-        <div className="w-60 bg-gray-200 p-2 shadow-inner fixed right-0 top-16">
-          <h2 className="text-xl font-bold text-[#0D0A4F] mb-2 text-center">Carrito</h2>
+        <div className="w-60 bg-gray-200 dark:bg-gray-800 p-2 shadow-inner fixed right-0 top-16">
+          <h2 className="text-xl font-bold text-[#0D0A4F] dark:text-white mb-2 text-center">Carrito</h2>
           <ul className="space-y-2">
             {cart.map((producto) => (
-              <li key={producto._id} className="bg-white p-2 rounded shadow text-sm">
+              <li
+                key={producto._id}
+                className="bg-white dark:bg-gray-700 p-2 rounded shadow text-sm text-black dark:text-white"
+              >
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-bold">{producto.nombre}</h3>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 dark:text-gray-300">
                       {formatearPesos(producto.precio)} x{producto.cantidad}
                     </p>
                   </div>
@@ -143,7 +186,7 @@ const Catalogo = () => {
           </ul>
           <div className="border-t border-gray-300 mt-2 pt-2">
             <p className="text-center font-bold text-lg">
-              Total: {formatearPesos(cart.reduce((total, producto) => total + producto.precio * producto.cantidad, 0))}
+              Total: {formatearPesos(cart.reduce((total, p) => total + p.precio * p.cantidad, 0))}
             </p>
           </div>
           <button

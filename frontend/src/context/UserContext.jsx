@@ -1,25 +1,36 @@
 import React, { createContext, useState, useEffect } from "react";
 
-// Crear el contexto de usuario
+// Crear el contexto
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Estado para el usuario
+  const [user, setUser] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
-  // Función para cargar el usuario desde localStorage
-  const loadUserFromLocalStorage = () => {
+  // Cargar usuario desde localStorage
+  useEffect(() => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (storedUser) {
-        setUser(storedUser);
-      }
+      if (storedUser) setUser(storedUser);
     } catch (error) {
       console.error("Error al cargar el usuario desde localStorage:", error.message);
-      localStorage.removeItem("user"); // Limpia datos corruptos
+      localStorage.removeItem("user");
     }
-  };
+  }, []);
 
-  // Función para guardar el usuario en localStorage y en el estado
+  // Cargar modo oscuro desde localStorage
+  useEffect(() => {
+    const storedDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(storedDarkMode);
+  }, []);
+
+  // Aplicar clase `dark` al <html> según el estado
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+  // Guardar usuario en localStorage
   const login = (userData) => {
     try {
       localStorage.setItem("user", JSON.stringify(userData));
@@ -29,19 +40,14 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // Función para cerrar sesión
+  // Cerrar sesión
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
   };
 
-  // Cargar usuario desde localStorage al iniciar
-  useEffect(() => {
-    loadUserFromLocalStorage();
-  }, []);
-
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, darkMode, setDarkMode }}>
       {children}
     </UserContext.Provider>
   );
