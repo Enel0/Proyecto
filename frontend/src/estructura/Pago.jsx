@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
-import { CartContext } from "../context/CartContext"; // Contexto del carrito
-import { UserContext } from "../context/UserContext"; // Contexto del usuario
+import { CartContext } from "../context/CartContext";
+import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import logo from "../Imagenes/logo.png";
 
 const Pago = () => {
   const { cart, clearCart } = useContext(CartContext);
-  const { user } = useContext(UserContext); // Obtener el usuario del contexto
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
@@ -15,27 +15,23 @@ const Pago = () => {
   const [fechaExpiracion, setFechaExpiracion] = useState("");
   const [cvv, setCvv] = useState("");
   const [loading, setLoading] = useState(false);
-  const costoDelivery = 3000; // Precio del delivery en CLP
+  const costoDelivery = 3000;
 
   useEffect(() => {
-    // Si no hay usuario autenticado, redirigir al login
     if (!user) {
       alert("Debes iniciar sesión para realizar el pago.");
       navigate("/login");
     }
   }, [user, navigate]);
 
-  // Calcular el subtotal del carrito
   const calcularSubtotal = () => {
     return cart.reduce((total, item) => total + item.precio * item.cantidad, 0);
   };
 
-  // Calcular el total con delivery
   const calcularTotalConDelivery = () => {
     return calcularSubtotal() + costoDelivery;
   };
 
-  // Formatear precios como pesos chilenos
   const formatearPesos = (valor) => {
     return new Intl.NumberFormat("es-CL", {
       style: "currency",
@@ -43,49 +39,80 @@ const Pago = () => {
     }).format(valor);
   };
 
-  // Generar PDF
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
-
-    // Configurar logo
-    const imgWidth = 50;
-    const imgHeight = 50;
-    doc.addImage(logo, "PNG", 80, 10, imgWidth, imgHeight);
+    
+    // Agregar logo
+    const imgWidth = 30;
+    const imgHeight = 30;
+    doc.addImage(logo, "PNG", 85, 15, imgWidth, imgHeight);
 
     // Título
     doc.setFontSize(20);
-    doc.text("Resumen de Compra", 20, 70);
+    doc.setTextColor(13, 10, 79); // Color #0D0A4F
+    doc.text("Resumen de Compra", 105, 50, { align: "center" });
+
+    // Información del cliente
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // Negro
+    doc.text(`Cliente: ${user?.nombre || nombre}`, 20, 70);
+    doc.text(`Dirección: ${direccion}`, 20, 80);
+    doc.text(`Teléfono: ${user?.telefono || "No especificado"}`, 20, 90);
+
+    // Línea divisoria
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, 100, 190, 100);
 
     // Detalle del pedido
     doc.setFontSize(14);
-    doc.text("Detalle del Pedido:", 20, 90);
-    cart.forEach((item, index) => {
-      doc.text(
-        `- ${item.nombre}: ${formatearPesos(item.precio)} x ${item.cantidad}`,
-        20,
-        100 + index * 10
-      );
+    doc.setTextColor(13, 10, 79);
+    doc.text("Detalle del Pedido:", 20, 110);
+    
+    let yPosition = 120;
+    cart.forEach((item) => {
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`- ${item.nombre}`, 20, yPosition);
+      doc.text(`${formatearPesos(item.precio)} x ${item.cantidad}`, 160, yPosition, { align: "right" });
+      yPosition += 10;
     });
 
-    // Subtotal
-    const ySubtotal = 100 + cart.length * 10;
+    // Línea divisoria
+    doc.line(20, yPosition + 5, 190, yPosition + 5);
+
+    // Subtotales
     doc.setFontSize(12);
-    doc.text(`Subtotal: ${formatearPesos(calcularSubtotal())}`, 20, ySubtotal);
+    doc.text(`Subtotal:`, 20, yPosition + 15);
+    doc.text(`${formatearPesos(calcularSubtotal())}`, 160, yPosition + 15, { align: "right" });
 
-    // Delivery
-    const yDelivery = ySubtotal + 10;
-    doc.text(`Costo Delivery: ${formatearPesos(costoDelivery)}`, 20, yDelivery);
+    doc.text(`Costo Delivery:`, 20, yPosition + 25);
+    doc.text(`${formatearPesos(costoDelivery)}`, 160, yPosition + 25, { align: "right" });
 
-    // Total
-    const yTotal = yDelivery + 10;
+    // Total final
     doc.setFontSize(16);
-    doc.text(`Total: ${formatearPesos(calcularTotalConDelivery())}`, 20, yTotal);
+    doc.setTextColor(13, 10, 79);
+    doc.text(`Total:`, 20, yPosition + 40);
+    doc.text(`${formatearPesos(calcularTotalConDelivery())}`, 160, yPosition + 40, { align: "right" });
 
-    // Guardar el PDF
-    doc.save("resumen_compra.pdf");
+    // Fecha
+    const today = new Date();
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      `Fecha de compra: ${today.toLocaleDateString('es-CL', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })}`,
+      20,
+      yPosition + 60
+    );
+
+    // Guardar PDF
+    doc.save(`resumen_compra_${today.getTime()}.pdf`);
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -109,9 +136,9 @@ const Pago = () => {
       }
 
       alert("¡Pago realizado con éxito!");
-      handleGeneratePDF(); // Genera el PDF después del pago
-      clearCart(); // Vaciar el carrito
-      navigate("/estado-pedido"); // Redirigir a la página de estado de pedido
+      handleGeneratePDF();
+      clearCart();
+      navigate("/estado-pedido");
     } catch (error) {
       console.error(error.message);
       alert("Hubo un problema al realizar el pago.");
@@ -162,8 +189,88 @@ const Pago = () => {
           className="bg-white shadow-md rounded-lg p-6 w-full max-w-md"
         >
           <h2 className="text-xl font-bold mb-4">Información de Pago y Envío</h2>
-          {/* Inputs de formulario */}
-          {/* ... */}
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="nombre">
+              Nombre Completo
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              className="w-full p-2 border rounded"
+              value={user?.nombre || nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="direccion">
+              Dirección de Envío
+            </label>
+            <input
+              type="text"
+              id="direccion"
+              className="w-full p-2 border rounded"
+              value={direccion}
+              onChange={(e) => setDireccion(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="tarjeta">
+              Número de Tarjeta
+            </label>
+            <input
+              type="text"
+              id="tarjeta"
+              className="w-full p-2 border rounded"
+              value={numeroTarjeta}
+              onChange={(e) => setNumeroTarjeta(e.target.value)}
+              placeholder="1234 5678 9012 3456"
+              required
+            />
+          </div>
+
+          <div className="flex gap-4 mb-4">
+            <div className="w-1/2">
+              <label className="block text-gray-700 mb-2" htmlFor="fecha">
+                Fecha Expiración
+              </label>
+              <input
+                type="text"
+                id="fecha"
+                className="w-full p-2 border rounded"
+                value={fechaExpiracion}
+                onChange={(e) => setFechaExpiracion(e.target.value)}
+                placeholder="MM/AA"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label className="block text-gray-700 mb-2" htmlFor="cvv">
+                CVV
+              </label>
+              <input
+                type="text"
+                id="cvv"
+                className="w-full p-2 border rounded"
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
+                placeholder="123"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#0D0A4F] text-white py-3 rounded-lg font-bold hover:bg-[#1a1668] transition-colors"
+            disabled={loading || cart.length === 0}
+          >
+            {loading ? "Procesando..." : "Realizar Pago"}
+          </button>
         </form>
       </div>
     </div>
