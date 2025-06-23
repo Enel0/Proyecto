@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import logo from "../imagenes/logoSushi.jpg";
@@ -13,6 +13,37 @@ function RegistroForm() {
   } = useForm();
 
   const password = watch("password");
+  const email = watch("email");
+
+  const [codigoGenerado, setCodigoGenerado] = useState("");
+  const [codigoEnviado, setCodigoEnviado] = useState(false);
+
+  const enviarCodigo = () => {
+    if (!email) {
+      alert("Primero ingresa tu correo electrónico");
+      return;
+    }
+
+    fetch("http://localhost:5000/api/enviar-codigo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.codigo) {
+          setCodigoGenerado(data.codigo);
+          setCodigoEnviado(true);
+          alert("Código enviado a tu correo");
+        } else {
+          alert("No se pudo enviar el código: " + data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error al enviar código:", error);
+        alert("Hubo un problema al enviar el correo");
+      });
+  };
 
   const onSubmit = (data) => {
     const jsonData = {
@@ -76,12 +107,10 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Nombre</label>
             <input
               type="text"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("firstName", { required: "El nombre es obligatorio" })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
-            )}
+            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
           </div>
 
           {/* Apellido */}
@@ -89,12 +118,10 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Apellido</label>
             <input
               type="text"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("lastName", { required: "El apellido es obligatorio" })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
-            )}
+            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
           </div>
 
           {/* RUT */}
@@ -102,7 +129,6 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">RUT</label>
             <input
               type="text"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("rut", {
                 required: "El RUT es obligatorio",
                 pattern: {
@@ -110,44 +136,37 @@ function RegistroForm() {
                   message: "El RUT debe ser válido y terminar con un dígito o 'K'",
                 },
               })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.rut && (
-              <p className="text-red-500 text-sm mt-1">{errors.rut.message}</p>
-            )}
+            {errors.rut && <p className="text-red-500 text-sm mt-1">{errors.rut.message}</p>}
           </div>
 
-          {/* Fecha de Nacimiento */}
+          {/* Fecha de nacimiento */}
           <div>
             <label className="block text-gray-700 font-bold mb-1">Fecha de Nacimiento</label>
             <input
               type="date"
+              {...register("birthDate", { required: "La fecha de nacimiento es obligatoria" })}
               className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-              {...register("birthDate", {
-                required: "La fecha de nacimiento es obligatoria",
-              })}
             />
-            {errors.birthDate && (
-              <p className="text-red-500 text-sm mt-1">{errors.birthDate.message}</p>
-            )}
+            {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate.message}</p>}
           </div>
 
-          {/* Correo Electrónico */}
+          {/* Email */}
           <div>
             <label className="block text-gray-700 font-bold mb-1">Correo Electrónico</label>
             <input
               type="email"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("email", {
-                required: "El correo electrónico es obligatorio",
+                required: "El correo es obligatorio",
                 pattern: {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: "Debe ser un correo válido",
+                  message: "Formato de correo inválido",
                 },
               })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
           {/* Dirección */}
@@ -155,12 +174,10 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Dirección</label>
             <input
               type="text"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("address", { required: "La dirección es obligatoria" })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.address && (
-              <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
-            )}
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
           </div>
 
           {/* Región */}
@@ -168,12 +185,10 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Región</label>
             <input
               type="text"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("region", { required: "La región es obligatoria" })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.region && (
-              <p className="text-red-500 text-sm mt-1">{errors.region.message}</p>
-            )}
+            {errors.region && <p className="text-red-500 text-sm mt-1">{errors.region.message}</p>}
           </div>
 
           {/* Comuna */}
@@ -181,29 +196,25 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Comuna</label>
             <input
               type="text"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("comuna", { required: "La comuna es obligatoria" })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.comuna && (
-              <p className="text-red-500 text-sm mt-1">{errors.comuna.message}</p>
-            )}
+            {errors.comuna && <p className="text-red-500 text-sm mt-1">{errors.comuna.message}</p>}
           </div>
 
           {/* Género */}
           <div>
             <label className="block text-gray-700 font-bold mb-1">Género</label>
             <select
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("gender", { required: "El género es obligatorio" })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="">Seleccionar...</option>
               <option value="Masculino">Masculino</option>
               <option value="Femenino">Femenino</option>
               <option value="Otro">Otro</option>
             </select>
-            {errors.gender && (
-              <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>
-            )}
+            {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>}
           </div>
 
           {/* Teléfono */}
@@ -211,18 +222,16 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Teléfono</label>
             <input
               type="tel"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("phone", {
                 required: "El teléfono es obligatorio",
                 pattern: {
                   value: /^[0-9]{9}$/,
-                  message: "Debe ser un número de 9 dígitos",
+                  message: "Debe tener 9 dígitos",
                 },
               })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-            )}
+            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
           </div>
 
           {/* Contraseña */}
@@ -230,32 +239,67 @@ function RegistroForm() {
             <label className="block text-gray-700 font-bold mb-1">Contraseña</label>
             <input
               type="password"
+              {...register("password", {
+                required: "La contraseña es obligatoria",
+                pattern: {
+                  value: /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                  message:
+                    "Debe tener al menos 8 caracteres, una mayúscula y un símbolo",
+                },
+              })}
               className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-              {...register("password", { required: "La contraseña es obligatoria" })}
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-            )}
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
           </div>
 
-          {/* Confirmar Contraseña */}
+          {/* Confirmar contraseña */}
           <div>
             <label className="block text-gray-700 font-bold mb-1">Confirmar Contraseña</label>
             <input
               type="password"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               {...register("confirmPassword", {
-                required: "La confirmación de contraseña es obligatoria",
+                required: "Debes confirmar la contraseña",
                 validate: (value) =>
                   value === password || "Las contraseñas no coinciden",
               })}
+              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword.message}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
             )}
           </div>
+
+          {/* Botón para enviar código */}
+          <div className="col-span-full">
+            <button
+              type="button"
+              onClick={enviarCodigo}
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              Enviar Código de Verificación
+            </button>
+          </div>
+
+          {/* Campo para ingresar código */}
+          {codigoEnviado && (
+            <div className="col-span-full">
+              <label className="block text-gray-700 font-bold mb-1">Código de Verificación</label>
+              <input
+                type="text"
+                {...register("codigoVerificacion", {
+                  required: "Debes ingresar el código enviado a tu correo",
+                  validate: (value) =>
+                    value === codigoGenerado || "El código ingresado no es válido",
+                })}
+                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              {errors.codigoVerificacion && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.codigoVerificacion.message}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Botones */}
           <div className="col-span-full flex justify-between mt-4">

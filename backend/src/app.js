@@ -7,9 +7,13 @@ import autRutas from "./routes/autRutas.js";
 import loginRutas from "./routes/loginRutas.js";
 import usuariosRoutes from "./routes/usuarios.js";
 import pedidosRoutes from "./routes/pedidos.js";
+import correoRoutes from "./correo.js";
+
 
 const app = express();
 const __dirname = path.resolve();
+
+
 
 // Middlewares
 app.use(morgan("dev"));
@@ -25,6 +29,10 @@ app.use("/api/auth", autRutas); // Para registro
 app.use("/api/auth/login", loginRutas);
 app.use("/api", usuariosRoutes); // Registrar las rutas de usuarios
 app.use("/api/pedidos", pedidosRoutes);
+
+//  Correo
+app.use("/api", correoRoutes); // esto permite POST /api/enviar-codigo
+
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {
