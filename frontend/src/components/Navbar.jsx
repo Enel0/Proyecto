@@ -43,6 +43,10 @@ function Navbar() {
                 <button onClick={() => navigate("/actualizar-producto")} className="hover:underline">Actualizar Producto</button>
                 <button onClick={() => navigate("/comandas")} className="hover:underline">Comandas</button>
                 <button onClick={() => navigate("/estado-pedido")} className="hover:underline">Mis Pedidos</button>
+                <button onClick={() => navigate("/AdminComentarios")} className="hover:underline">AdminComentarios</button>
+          
+
+
               </>
             )}
 

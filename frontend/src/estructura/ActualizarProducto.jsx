@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import LogoImage from '../Imagenes/logo.png'; // Asegúrate de que la ruta sea correcta
+import LogoImage from '../Imagenes/logo.png';
 
 const ActualizarProducto = () => {
-  const [productos, setProductos] = useState([]); // Lista de productos
-  const [productoSeleccionado, setProductoSeleccionado] = useState(''); // Producto seleccionado
+  const [productos, setProductos] = useState([]);
+  const [productoSeleccionado, setProductoSeleccionado] = useState('');
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState('');
@@ -11,14 +11,13 @@ const ActualizarProducto = () => {
   const [categoria, setCategoria] = useState('');
   const [foto, setFoto] = useState(null);
 
-  // Cargar la lista de productos al inicio
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/productos'); // URL del backend
+        const response = await fetch('http://localhost:5000/api/productos');
         if (response.ok) {
           const data = await response.json();
-          setProductos(data); // Guarda la lista de productos
+          setProductos(data);
         } else {
           console.error('Error al obtener los productos');
         }
@@ -30,7 +29,6 @@ const ActualizarProducto = () => {
     fetchProductos();
   }, []);
 
-  // Cargar los datos del producto seleccionado
   useEffect(() => {
     if (productoSeleccionado) {
       const fetchProducto = async () => {
@@ -43,7 +41,7 @@ const ActualizarProducto = () => {
             setPrecio(producto.precio);
             setStock(producto.stock);
             setCategoria(producto.categoria);
-            setFoto(producto.imagen); // Ruta de la imagen
+            setFoto(producto.imagen);
           } else {
             console.error('Error al cargar el producto');
           }
@@ -78,9 +76,8 @@ const ActualizarProducto = () => {
 
       if (response.ok) {
         alert('Producto actualizado con éxito');
-        window.location.reload(); // Recargar la página
+        window.location.reload();
       } else {
-        console.error('Error al actualizar el producto');
         alert('Error al actualizar el producto');
       }
     } catch (error) {
@@ -99,9 +96,8 @@ const ActualizarProducto = () => {
 
       if (response.ok) {
         alert('Producto eliminado con éxito');
-        window.location.reload(); // Recargar la página
+        window.location.reload();
       } else {
-        console.error('Error al eliminar el producto');
         alert('Error al eliminar el producto');
       }
     } catch (error) {
@@ -114,16 +110,14 @@ const ActualizarProducto = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 justify-center items-center">
-      {/* Logo */}
+    <div className="min-h-screen bg-[#0D0A4F] text-white flex flex-col items-center py-10 px-4">
       <img src={LogoImage} alt="Logo Fukusuke" className="w-48 mb-6" />
-      <h1 className="text-2xl font-bold mb-4">Actualizar Producto</h1>
+      <h1 className="text-3xl font-bold mb-6">Actualizar Producto</h1>
 
-      {/* Selección de producto */}
       <select
         value={productoSeleccionado}
         onChange={(e) => setProductoSeleccionado(e.target.value)}
-        className="p-2 rounded border border-gray-300 mb-4 w-1/2"
+        className="p-2 rounded border border-gray-300 mb-6 text-black w-full max-w-md"
       >
         <option value="">Selecciona un producto</option>
         {productos.map((producto) => (
@@ -133,41 +127,40 @@ const ActualizarProducto = () => {
         ))}
       </select>
 
-      {/* Formulario de edición */}
       {productoSeleccionado && (
-        <div className="w-full max-w-md bg-white p-4 rounded shadow">
+        <div className="w-full max-w-md bg-white text-black rounded-lg shadow-lg p-6">
           <input
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="p-2 rounded border border-gray-300 mb-4 w-full"
+            className="w-full p-2 mb-4 border border-gray-300 rounded"
             placeholder="Nombre"
           />
           <textarea
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
-            className="p-2 rounded border border-gray-300 mb-4 w-full"
+            className="w-full p-2 mb-4 border border-gray-300 rounded"
             placeholder="Descripción"
           />
           <input
             type="number"
             value={precio}
             onChange={(e) => setPrecio(e.target.value)}
-            className="p-2 rounded border border-gray-300 mb-4 w-full"
+            className="w-full p-2 mb-4 border border-gray-300 rounded"
             placeholder="Precio"
           />
           <input
             type="number"
             value={stock}
             onChange={(e) => setStock(e.target.value)}
-            className="p-2 rounded border border-gray-300 mb-4 w-full"
+            className="w-full p-2 mb-4 border border-gray-300 rounded"
             placeholder="Stock"
           />
           <input
             type="text"
             value={categoria}
             onChange={(e) => setCategoria(e.target.value)}
-            className="p-2 rounded border border-gray-300 mb-4 w-full"
+            className="w-full p-2 mb-4 border border-gray-300 rounded"
             placeholder="Categoría"
           />
           <input type="file" onChange={handleFileChange} className="mb-4" accept="image/*" />
@@ -177,16 +170,16 @@ const ActualizarProducto = () => {
           {foto && typeof foto !== 'string' && (
             <img src={URL.createObjectURL(foto)} alt="Vista previa" className="w-32 h-32 object-cover mb-4" />
           )}
-          <div className="flex gap-4">
+          <div className="flex justify-between mt-4">
             <button
               onClick={handleUpdate}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Actualizar
             </button>
             <button
               onClick={handleDelete}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
             >
               Eliminar
             </button>

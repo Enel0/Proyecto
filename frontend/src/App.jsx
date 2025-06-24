@@ -14,6 +14,7 @@ import LoginForm from "./estructura/LoginForm";
 import RegistroForm from "./estructura/RegistroForm";
 import AsignarRoles from "./estructura/AsignarRoles";
 import Comandas from "./estructura/Comandas";
+import AdminComentarios from './estructura/AdminComentarios';
 
 function App() {
   return (
@@ -39,6 +40,8 @@ function App() {
             <Route path="/agregarProducto" element={<AgregarProducto />} />
             <Route path="/actualizar-producto" element={<ActualizarProducto />} />
             <Route path="/comandas" element={<Comandas />} />
+            <Route path="/AdminComentarios" element={<AdminComentarios />} />
+
 
             {/* Ruta de página no encontrada */}
             <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

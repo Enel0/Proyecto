@@ -8,6 +8,7 @@ import loginRutas from "./routes/loginRutas.js";
 import usuariosRoutes from "./routes/usuarios.js";
 import pedidosRoutes from "./routes/pedidos.js";
 import correoRoutes from "./correo.js";
+import comentariosRoutes from "./routes/comentariosRoutes.js";
 
 
 const app = express();
@@ -29,6 +30,8 @@ app.use("/api/auth", autRutas); // Para registro
 app.use("/api/auth/login", loginRutas);
 app.use("/api", usuariosRoutes); // Registrar las rutas de usuarios
 app.use("/api/pedidos", pedidosRoutes);
+app.use("/api", comentariosRoutes);
+
 
 //  Correo
 app.use("/api", correoRoutes); // esto permite POST /api/enviar-codigo
