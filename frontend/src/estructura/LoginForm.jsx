@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import logo from "../imagenes/logoSushi.jpg";
+import { API_BASE } from "../config";
 
 function LoginForm() {
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
@@ -24,7 +25,11 @@ function LoginForm() {
     setLoading(true);
     setErrorMessage("");
     try {
+<<<<<<< codex/configure-api_base-and-update-fetch-calls
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+=======
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+>>>>>>> main
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -53,7 +58,11 @@ function LoginForm() {
       return;
     }
     try {
+<<<<<<< codex/configure-api_base-and-update-fetch-calls
+      const res = await fetch(`${API_BASE}/api/enviar-codigo`, {
+=======
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/enviar-codigo`, {
+>>>>>>> main
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -89,7 +98,11 @@ function LoginForm() {
     try {
       if (!data.newPassword) throw new Error("Ingresa una nueva contraseña");
 
+<<<<<<< codex/configure-api_base-and-update-fetch-calls
+      const res = await fetch(`${API_BASE}/api/auth/login/reset-password`, {
+=======
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login/reset-password`, {
+>>>>>>> main
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
