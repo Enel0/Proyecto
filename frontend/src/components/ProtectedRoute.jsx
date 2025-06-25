@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 function ProtectedRoute({ children, roles }) {
   const token = localStorage.getItem("token");
@@ -10,7 +11,7 @@ function ProtectedRoute({ children, roles }) {
 
   let userData;
   try {
-    userData = JSON.parse(token); // Decodificar el token (JSON string)
+    userData = jwtDecode(token);
   } catch (error) {
     console.error("Error al decodificar el token:", error.message);
     return <Navigate to="/login" />;
