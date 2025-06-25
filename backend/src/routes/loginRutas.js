@@ -1,6 +1,7 @@
 import express from "express";
 import Usuario from "../models/Usuario.js";
 import bcrypt from "bcrypt";
+import { generarToken } from "../utils/jwtUtils.js";
 
 const router = express.Router();
 
@@ -19,12 +20,7 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
-    const token = JSON.stringify({
-      id: usuario._id,
-      nombre: usuario.nombre,
-      email: usuario.email,
-      rol: usuario.rol,
-    });
+    const token = generarToken(usuario);
 
     res.status(200).json({
       message: "Inicio de sesión exitoso",
