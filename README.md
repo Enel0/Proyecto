@@ -1,3 +1,4 @@
+
 //crear-archivo-readme.md
 # Proyecto Overview
 
@@ -33,7 +34,7 @@ This repository contains two separate applications:
 - Run the backend with Node (e.g., `node src/index.js`) or a process manager such as PM2.
 - Ensure all environment variables are set on the production server and MongoDB is accessible.
 
-=======
+
 # Proyecto
 
 This repository contains two separate projects:
@@ -69,4 +70,7 @@ For a production build of the React app:
 cd frontend
 npm run build
 ```
+
+
  main
+
