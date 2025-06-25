@@ -6,6 +6,9 @@ const DEFAULT_URI = "mongodb://localhost:27017/NuevoPrueba";
 export const connectDB = async () => {
     const uri = process.env.MONGODB_URI || DEFAULT_URI;
     try {
+        const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/NuevoPrueba";
+        await mongoose.connect(mongoUri, {
+
         await mongoose.connect(uri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,

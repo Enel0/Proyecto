@@ -7,7 +7,10 @@ export const protegerRuta = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET || "clave_secreta_super_segura");
+    const decoded = jwt.verify(
+      token.replace("Bearer ", ""),
+      process.env.JWT_SECRET
+    );
     req.user = decoded; // Adjunta el usuario decodificado a la solicitud
     next();
   } catch (error) {
