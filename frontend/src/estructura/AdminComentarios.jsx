@@ -8,7 +8,7 @@ const AdminComentarios = () => {
 
   const obtenerComentarios = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/comentarios');
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comentarios`);
       const data = await res.json();
       setComentarios(data);
     } catch (err) {
@@ -20,7 +20,7 @@ const AdminComentarios = () => {
 
   const aprobarComentario = async (id, aprobado) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/comentarios/${id}/aprobar`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comentarios/${id}/aprobar`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ aprobado }),

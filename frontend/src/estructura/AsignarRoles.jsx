@@ -9,7 +9,7 @@ function AsignarRoles() {
 
   // Cargar lista de usuarios
   useEffect(() => {
-    fetch("http://localhost:5000/api/usuarios")
+    fetch(`${import.meta.env.VITE_API_URL}/api/usuarios`)
       .then((res) => res.json())
       .then((data) => {
         setUsuarios(data);
@@ -22,7 +22,7 @@ function AsignarRoles() {
   }, []);
 
   const actualizarRol = (id, nuevoRol) => {
-    fetch(`http://localhost:5000/api/actualizar-rol/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/actualizar-rol/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rol: nuevoRol }),
