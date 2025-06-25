@@ -19,7 +19,11 @@ const MisPedidos = () => {
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
+
         const res = await fetch(`${API_BASE}/api/pedidos/usuario/${user.email}`);
+
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pedidos/usuario/${user.email}`);
+
         const data = await res.json();
         setPedidos(data);
       } catch (err) {
@@ -63,7 +67,11 @@ const MisPedidos = () => {
     console.log("Enviando comentario:", payload);
 
     try {
+
       const res = await fetch(`${API_BASE}/api/comentarios`, {
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comentarios`, {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

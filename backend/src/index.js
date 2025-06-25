@@ -1,6 +1,10 @@
 // index.js
+import 'dotenv/config';
 import { connectDB } from './db.js'; // Importa la conexión
 import app from './app.js'; // Importa la configuración del servidor
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 

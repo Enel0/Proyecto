@@ -36,6 +36,7 @@ const AgregarProducto = () => {
 
       // Hacer la solicitud al backend
       const response = await fetch(`${API_BASE}/api/productos`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos`, {
         method: 'POST',
         body: formData,
       });
