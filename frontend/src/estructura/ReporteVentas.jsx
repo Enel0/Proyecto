@@ -18,7 +18,7 @@ const ReporteVentas = () => {
     setError(null);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/pedidos/ventas?startDate=${startDate}&endDate=${endDate}`
+        `${import.meta.env.VITE_API_URL}/api/pedidos/ventas?startDate=${startDate}&endDate=${endDate}`
       );
       if (!response.ok) throw new Error("Error al obtener los datos de ventas.");
       const data = await response.json();
