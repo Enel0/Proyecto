@@ -18,8 +18,8 @@ router.post("/enviar-codigo", async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "mati.xoda@gmail.com",
-      pass: "tsui uerd sshm qgtb", // Usa contraseña de aplicación
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
     },
   });
 
