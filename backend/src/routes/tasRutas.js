@@ -5,7 +5,7 @@ import {
     createTarea,
     deleteTarea,
     updateTarea
-} from "../controladores/tasControlador.js"
+} from "../controllers/tasControlador.js"
 
 const router = Router()
 
