@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LogoImage from '../Imagenes/logo.png';
+import { API_BASE } from '../config';
 
 const ActualizarProducto = () => {
   const [productos, setProductos] = useState([]);
@@ -14,7 +15,7 @@ const ActualizarProducto = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/productos');
+        const response = await fetch(`${API_BASE}/api/productos`);
         if (response.ok) {
           const data = await response.json();
           setProductos(data);
@@ -33,7 +34,7 @@ const ActualizarProducto = () => {
     if (productoSeleccionado) {
       const fetchProducto = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/productos/${productoSeleccionado}`);
+          const response = await fetch(`${API_BASE}/api/productos/${productoSeleccionado}`);
           if (response.ok) {
             const producto = await response.json();
             setNombre(producto.nombre);
@@ -69,7 +70,7 @@ const ActualizarProducto = () => {
       formData.append('categoria', categoria);
       if (foto && typeof foto !== 'string') formData.append('imagen', foto);
 
-      const response = await fetch(`http://localhost:5000/api/productos/${productoSeleccionado}`, {
+      const response = await fetch(`${API_BASE}/api/productos/${productoSeleccionado}`, {
         method: 'PUT',
         body: formData,
       });
@@ -90,7 +91,7 @@ const ActualizarProducto = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/productos/${productoSeleccionado}`, {
+      const response = await fetch(`${API_BASE}/api/productos/${productoSeleccionado}`, {
         method: 'DELETE',
       });
 
@@ -165,7 +166,7 @@ const ActualizarProducto = () => {
           />
           <input type="file" onChange={handleFileChange} className="mb-4" accept="image/*" />
           {foto && typeof foto === 'string' && (
-            <img src={`http://localhost:5000${foto}`} alt="Imagen actual" className="w-32 h-32 object-cover mb-4" />
+            <img src={`${API_BASE}${foto}`} alt="Imagen actual" className="w-32 h-32 object-cover mb-4" />
           )}
           {foto && typeof foto !== 'string' && (
             <img src={URL.createObjectURL(foto)} alt="Vista previa" className="w-32 h-32 object-cover mb-4" />

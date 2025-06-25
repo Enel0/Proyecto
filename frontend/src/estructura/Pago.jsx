@@ -4,6 +4,7 @@ import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import logo from "../Imagenes/logo.png";
+import { API_BASE } from "../config";
 
 const Pago = () => {
   const { cart, clearCart } = useContext(CartContext);
@@ -99,7 +100,7 @@ const Pago = () => {
     setLoading(true);
     const total = calcularTotalConDelivery();
     try {
-      const response = await fetch("http://localhost:5000/api/pedidos", {
+      const response = await fetch(`${API_BASE}/api/pedidos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario: user, carrito: cart, total, direccion }),

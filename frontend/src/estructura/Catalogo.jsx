@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { UserContext } from '../context/UserContext';
 import CarritoImage from '../Imagenes/carrito.png';
+import { API_BASE } from '../config';
 
 const Catalogo = () => {
   const { cart, setCart } = useContext(CartContext);
@@ -23,7 +24,7 @@ const Catalogo = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/productos');
+        const response = await fetch(`${API_BASE}/api/productos`);
         const data = await response.json();
         setProductos(data);
       } catch (error) {
@@ -130,7 +131,7 @@ const Catalogo = () => {
             className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center text-black dark:text-white"
           >
             <img
-              src={`http://localhost:5000${producto.imagen}`}
+              src={`${API_BASE}${producto.imagen}`}
               alt={producto.nombre}
               className="w-48 h-auto mx-auto mb-4"
             />

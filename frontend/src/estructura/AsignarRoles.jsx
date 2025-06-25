@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE } from "../config";
 
 function AsignarRoles() {
   const [usuarios, setUsuarios] = useState([]);
@@ -9,7 +10,7 @@ function AsignarRoles() {
 
   // Cargar lista de usuarios
   useEffect(() => {
-    fetch("http://localhost:5000/api/usuarios")
+    fetch(`${API_BASE}/api/usuarios`)
       .then((res) => res.json())
       .then((data) => {
         setUsuarios(data);
@@ -22,7 +23,7 @@ function AsignarRoles() {
   }, []);
 
   const actualizarRol = (id, nuevoRol) => {
-    fetch(`http://localhost:5000/api/actualizar-rol/${id}`, {
+    fetch(`${API_BASE}/api/actualizar-rol/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rol: nuevoRol }),

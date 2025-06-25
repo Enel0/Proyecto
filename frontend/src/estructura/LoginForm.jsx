@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import logo from "../imagenes/logoSushi.jpg";
+import { API_BASE } from "../config";
 
 function LoginForm() {
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
@@ -24,7 +25,7 @@ function LoginForm() {
     setLoading(true);
     setErrorMessage("");
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -53,7 +54,7 @@ function LoginForm() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/enviar-codigo", {
+      const res = await fetch(`${API_BASE}/api/enviar-codigo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -89,7 +90,7 @@ function LoginForm() {
     try {
       if (!data.newPassword) throw new Error("Ingresa una nueva contraseña");
 
-      const res = await fetch("http://localhost:5000/api/auth/login/reset-password", {
+      const res = await fetch(`${API_BASE}/api/auth/login/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
