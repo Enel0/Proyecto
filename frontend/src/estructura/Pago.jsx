@@ -99,7 +99,7 @@ const Pago = () => {
     setLoading(true);
     const total = calcularTotalConDelivery();
     try {
-      const response = await fetch("http://localhost:5000/api/pedidos", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pedidos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario: user, carrito: cart, total, direccion }),

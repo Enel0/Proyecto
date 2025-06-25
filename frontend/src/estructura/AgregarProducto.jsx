@@ -34,7 +34,7 @@ const AgregarProducto = () => {
       formData.append('imagen', foto);
 
       // Hacer la solicitud al backend
-      const response = await fetch('http://localhost:5000/api/productos', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos`, {
         method: 'POST',
         body: formData,
       });
