@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import logo from "../imagenes/logoSushi.jpg";
+import { API_BASE } from "../config";
 
 function LoginForm() {
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
@@ -24,7 +25,11 @@ function LoginForm() {
     setLoading(true);
     setErrorMessage("");
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+<<<<<<< codex/configure-api_base-and-update-fetch-calls
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+=======
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+>>>>>>> main
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -53,7 +58,11 @@ function LoginForm() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/enviar-codigo", {
+<<<<<<< codex/configure-api_base-and-update-fetch-calls
+      const res = await fetch(`${API_BASE}/api/enviar-codigo`, {
+=======
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/enviar-codigo`, {
+>>>>>>> main
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -89,7 +98,11 @@ function LoginForm() {
     try {
       if (!data.newPassword) throw new Error("Ingresa una nueva contraseña");
 
-      const res = await fetch("http://localhost:5000/api/auth/login/reset-password", {
+<<<<<<< codex/configure-api_base-and-update-fetch-calls
+      const res = await fetch(`${API_BASE}/api/auth/login/reset-password`, {
+=======
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login/reset-password`, {
+>>>>>>> main
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -132,7 +145,7 @@ function LoginForm() {
                 <input
                   type="email"
                   className="w-full p-3 border rounded"
-                  {...register("email", { required: "El correo electrónico es obligatorio" })}
+                  {...register("email`, { required: "El correo electrónico es obligatorio" })}
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
               </div>
@@ -141,7 +154,7 @@ function LoginForm() {
                 <input
                   type="password"
                   className="w-full p-3 border rounded"
-                  {...register("password", { required: "La contraseña es obligatoria" })}
+                  {...register("password`, { required: "La contraseña es obligatoria" })}
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
               </div>
@@ -235,7 +248,7 @@ function LoginForm() {
                 type="password"
                 placeholder="Nueva contraseña"
                 className="w-full p-3 border rounded mb-3"
-                {...register("newPassword", { required: "La contraseña es obligatoria" })}
+                {...register("newPassword`, { required: "La contraseña es obligatoria" })}
               />
               {errors.newPassword && <p className="text-red-500 mb-2">{errors.newPassword.message}</p>}
               {errorMessage && <p className="text-red-500 mb-2">{errorMessage}</p>}

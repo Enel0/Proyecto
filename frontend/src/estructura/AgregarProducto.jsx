@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LogoImage from '../Imagenes/logo.png'; // Asegúrate de que la ruta sea correcta
+import { API_BASE } from '../config';
 
 const AgregarProducto = () => {
   // Estados para los campos del formulario
@@ -34,7 +35,8 @@ const AgregarProducto = () => {
       formData.append('imagen', foto);
 
       // Hacer la solicitud al backend
-      const response = await fetch('http://localhost:5000/api/productos', {
+      const response = await fetch(`${API_BASE}/api/productos`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos`, {
         method: 'POST',
         body: formData,
       });
