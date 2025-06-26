@@ -1,5 +1,6 @@
 *.zip
 Proyecto.zip
 
+# Ignore environment files
 .env
 *.env

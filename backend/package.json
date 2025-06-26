@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "build": "vite build"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
