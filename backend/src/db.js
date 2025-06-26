@@ -1,7 +1,7 @@
 // db.js
 import mongoose from 'mongoose';
 
-const DEFAULT_URI = 'mongodb://localhost:27017/NuevoPrueba';
+const DEFAULT_URI = 'mongodb://mongo:IUXpNpVgYNwSNauyYrYVVpTIDyAWTmcy@turntable.proxy.rlwy.net:53162';
 
 export const connectDB = async () => {
   const uri = process.env.MONGODB_URI || process.env.MONGO_URI || DEFAULT_URI;
