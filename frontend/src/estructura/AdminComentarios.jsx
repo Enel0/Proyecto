@@ -12,8 +12,6 @@ const AdminComentarios = () => {
 
       const res = await fetch(`${API_BASE}/api/comentarios`);
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comentarios`);
-
       const data = await res.json();
       setComentarios(data);
     } catch (err) {
@@ -27,8 +25,6 @@ const AdminComentarios = () => {
     try {
 
       const res = await fetch(`${API_BASE}/api/comentarios/${id}/aprobar`, {
-
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comentarios/${id}/aprobar`, {
 
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
