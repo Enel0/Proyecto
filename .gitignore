@@ -1,12 +1,6 @@
 *.zip
 Proyecto.zip
 
+# Ignore environment files
 .env
-<<<<<<< codex/eliminar-.env-y-agregar-.env.example
-=======
 *.env
-
-
-.env
-
->>>>>>> main
