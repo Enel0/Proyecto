@@ -11,9 +11,10 @@ This directory contains the React application built with Vite.
 
 ## Configuration
 
-API requests use the `API_BASE` constant exported from `src/config.js`. Create a
-`.env` file based on the provided `.env.example` and set `VITE_API_BASE_URL` to
-the base URL of your backend API.
+API requests use the `API_BASE` constant exported from `src/config.js`, which is
+set to `/api`. Create a `.env` file based on the provided `.env.example` and set
+`VITE_API_BASE_URL` to the base URL of your backend API. The development server
+will proxy calls to `/api` to this URL.
 
 For production deployments you can set it to your Railway backend, for example:
 
