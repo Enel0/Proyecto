@@ -25,8 +25,10 @@ This repository contains two separate applications:
      ```
   - Update MongoDB connection string in `backend/src/db.js` if needed.
   - Copy `frontend/.env.example` to `frontend/.env` and set
-    `VITE_API_BASE_URL` to the base URL of your backend API
-    (for example `https://proyecto-produccion-df62.up.railway.app`).
+    `VITE_API_BASE_URL` to the base URL of your backend API. During
+    development the Vite dev server will proxy requests starting with
+    `/api` to this URL (for example
+    `https://proyecto-produccion-df62.up.railway.app`).
 3. Start development servers:
    - Backend: `npm run dev` inside `backend`.
    - Frontend: `npm run dev` inside `frontend`.
