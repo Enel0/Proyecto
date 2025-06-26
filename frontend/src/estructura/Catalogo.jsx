@@ -24,11 +24,7 @@ const Catalogo = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
         const response = await fetch(`${API_BASE}/api/productos`);
-=======
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos`);
->>>>>>> main
         const data = await response.json();
         setProductos(data);
       } catch (error) {
@@ -135,11 +131,7 @@ const Catalogo = () => {
             className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center text-black dark:text-white"
           >
             <img
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
               src={`${API_BASE}${producto.imagen}`}
-=======
-              src={`${import.meta.env.VITE_API_URL}${producto.imagen}`}
->>>>>>> main
               alt={producto.nombre}
               className="w-48 h-auto mx-auto mb-4"
             />

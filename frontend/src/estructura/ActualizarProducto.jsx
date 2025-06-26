@@ -15,11 +15,7 @@ const ActualizarProducto = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
         const response = await fetch(`${API_BASE}/api/productos`);
-=======
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos`);
->>>>>>> main
         if (response.ok) {
           const data = await response.json();
           setProductos(data);
@@ -38,11 +34,7 @@ const ActualizarProducto = () => {
     if (productoSeleccionado) {
       const fetchProducto = async () => {
         try {
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
           const response = await fetch(`${API_BASE}/api/productos/${productoSeleccionado}`);
-=======
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos/${productoSeleccionado}`);
->>>>>>> main
           if (response.ok) {
             const producto = await response.json();
             setNombre(producto.nombre);
@@ -78,11 +70,7 @@ const ActualizarProducto = () => {
       formData.append('categoria', categoria);
       if (foto && typeof foto !== 'string') formData.append('imagen', foto);
 
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
       const response = await fetch(`${API_BASE}/api/productos/${productoSeleccionado}`, {
-=======
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos/${productoSeleccionado}`, {
->>>>>>> main
         method: 'PUT',
         body: formData,
       });
@@ -103,11 +91,7 @@ const ActualizarProducto = () => {
     if (!confirmDelete) return;
 
     try {
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
       const response = await fetch(`${API_BASE}/api/productos/${productoSeleccionado}`, {
-=======
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos/${productoSeleccionado}`, {
->>>>>>> main
         method: 'DELETE',
       });
 
@@ -182,11 +166,7 @@ const ActualizarProducto = () => {
           />
           <input type="file" onChange={handleFileChange} className="mb-4" accept="image/*" />
           {foto && typeof foto === 'string' && (
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
             <img src={`${API_BASE}${foto}`} alt="Imagen actual" className="w-32 h-32 object-cover mb-4" />
-=======
-            <img src={`${import.meta.env.VITE_API_URL}${foto}`} alt="Imagen actual" className="w-32 h-32 object-cover mb-4" />
->>>>>>> main
           )}
           {foto && typeof foto !== 'string' && (
             <img src={URL.createObjectURL(foto)} alt="Vista previa" className="w-32 h-32 object-cover mb-4" />
