@@ -33,6 +33,12 @@ This repository contains two separate applications:
 - Build the frontend using `npm run build` in `frontend` and serve the generated `dist` folder with a static web server.
 - Run the backend with Node (e.g., `node src/index.js`) or a process manager such as PM2.
 - Ensure all environment variables are set on the production server and MongoDB is accessible.
+- Install dependencies during the build so native modules like **bcrypt** compile
+  for the target platform. A typical command is:
+  ```bash
+  npm ci && npm rebuild bcrypt --build-from-source && npm run build
+  ```
+  Use this as your custom build command on platforms like Railway.
 
 
 # Proyecto
@@ -72,5 +78,4 @@ npm run build
 ```
 
 
- main
 
