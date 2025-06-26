@@ -8,11 +8,7 @@ const Comandas = () => {
 
   // Obtener comandas
   useEffect(() => {
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
     fetch(`${API_BASE}/api/pedidos/comandas`)
-=======
-    fetch(`${import.meta.env.VITE_API_URL}/api/pedidos/comandas`)
->>>>>>> main
       .then((res) => {
         if (!res.ok) {
           throw new Error("No se pudieron cargar las comandas.");
@@ -31,11 +27,7 @@ const Comandas = () => {
 
   // Actualizar estado de una comanda
   const actualizarEstado = (id, nuevoEstado) => {
-<<<<<<< codex/configure-api_base-and-update-fetch-calls
     fetch(`${API_BASE}/api/pedidos/${id}`, {
-=======
-    fetch(`${import.meta.env.VITE_API_URL}/api/pedidos/${id}`, {
->>>>>>> main
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ estado: nuevoEstado }),
