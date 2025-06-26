@@ -23,7 +23,10 @@ This repository contains two separate applications:
      JWT_EXPIRATION=1h
      PORT=5000 # optional, defaults to 5000
      ```
-   - Update MongoDB connection string in `backend/src/db.js` if needed.
+  - Update MongoDB connection string in `backend/src/db.js` if needed.
+  - Copy `frontend/.env.example` to `frontend/.env` and set
+    `VITE_API_BASE_URL` to the base URL of your backend API
+    (for example `https://proyecto-produccion-df62.up.railway.app`).
 3. Start development servers:
    - Backend: `npm run dev` inside `backend`.
    - Frontend: `npm run dev` inside `frontend`.
