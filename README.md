@@ -21,9 +21,9 @@ This repository contains two separate applications:
      ```
      JWT_SECRET=your_jwt_secret
      JWT_EXPIRATION=1h
+     MONGODB_URI=mongodb://localhost:27017/NuevoPrueba
      PORT=5000 # optional, defaults to 5000
      ```
-   - Update MongoDB connection string in `backend/src/db.js` if needed.
 3. Start development servers:
    - Backend: `npm run dev` inside `backend`.
    - Frontend: `npm run dev` inside `frontend`.
