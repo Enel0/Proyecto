@@ -2,11 +2,4 @@
 Proyecto.zip
 
 .env
-<<<<<<< codex/eliminar-.env-y-agregar-.env.example
-=======
 *.env
-
-
-.env
-
->>>>>>> main

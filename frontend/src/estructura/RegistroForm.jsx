@@ -26,7 +26,6 @@ function RegistroForm() {
     }
 
     fetch(`${API_BASE}/api/enviar-codigo`, {
-    fetch(`${import.meta.env.VITE_API_URL}/api/enviar-codigo`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -64,8 +63,6 @@ function RegistroForm() {
 
 
     fetch(`${API_BASE}/api/auth/registro`, {
-
-    fetch(`${import.meta.env.VITE_API_URL}/api/auth/registro`, {
 
       method: "POST",
       headers: { "Content-Type": "application/json" },
